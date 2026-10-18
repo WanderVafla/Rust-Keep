@@ -18,16 +18,13 @@ pub struct UpsterNote {
 }
 
 pub async fn select_notes(pool: &SqlitePool) -> Result<Json<Vec<Note>>, sqlx::Error> {
-
     let query: Vec<Note> = sqlx::query_as::<_, Note>("select * from notes")
         .fetch_all(pool)
         .await?;
-    println!("{:?}", query);
     Ok(Json(query))
 }
 
 pub async fn insert_note(data: UpsterNote, pool: &SqlitePool) -> Result<Json<Note>, sqlx::Error> {
-
     let query: Note = sqlx::query_as::<_, Note>(
         "insert into notes (title, body)
         values ($1, $2)
@@ -38,12 +35,14 @@ pub async fn insert_note(data: UpsterNote, pool: &SqlitePool) -> Result<Json<Not
     .fetch_one(pool)
     .await?;
 
-    println!("{:?}", query);
     Ok(Json(query))
 }
 
-pub async fn update_note(id: u32, data: UpsterNote, pool: &SqlitePool) -> Result<Json<Note>, sqlx::Error> {
-
+pub async fn update_note(
+    id: u32,
+    data: UpsterNote,
+    pool: &SqlitePool,
+) -> Result<Json<Note>, sqlx::Error> {
     let query: Note = sqlx::query_as::<_, Note>(
         "update notes
         set
@@ -60,12 +59,10 @@ pub async fn update_note(id: u32, data: UpsterNote, pool: &SqlitePool) -> Result
     .fetch_one(pool)
     .await?;
 
-    println!("{:?}", query);
     Ok(Json(query))
 }
 
 pub async fn delete_note(id: u32, pool: &SqlitePool) -> Result<Json<Note>, sqlx::Error> {
-
     let query: Note = sqlx::query_as::<_, Note>(
         "delete from notes
         where
@@ -76,6 +73,5 @@ pub async fn delete_note(id: u32, pool: &SqlitePool) -> Result<Json<Note>, sqlx:
     .fetch_one(pool)
     .await?;
 
-    println!("{:?}", query);
     Ok(Json(query))
 }

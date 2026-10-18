@@ -1,11 +1,10 @@
 use axum::{Router, routing::get};
 
-mod notes;
 mod db;
+mod notes;
 use notes::router::notes_router;
 
-use crate::{db::create_pool};
-
+use crate::db::create_pool;
 
 #[tokio::main]
 async fn main() {
@@ -15,7 +14,11 @@ async fn main() {
         .nest("/notes", notes_router())
         .with_state(pool);
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.expect("listener Error");
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000")
+        .await
+        .expect("listener Error");
     println!("Listening on http://localhost:3000");
-    axum::serve(listener, app).await.expect_err("axum serve Error");    
+    axum::serve(listener, app)
+        .await
+        .expect_err("axum serve Error");
 }
