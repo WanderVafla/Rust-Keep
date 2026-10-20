@@ -6,44 +6,42 @@ use axum::{
 };
 use sqlx::SqlitePool;
 
-use crate::notes::repository::{
-    Note, UpsterNote, delete_note, insert_note, select_notes, update_note,
+use crate::{
+    error_handle::AppError,
+    notes::repository::{
+        InsertNote, Note, RawInsertNote, RawUpdateNote, UpdateNote, delete_note, insert_note,
+        select_notes, update_note,
+    },
 };
 
-fn db_error(e: sqlx::Error) -> (StatusCode, String) {
-    match e {
-        sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND, "Note not found".to_string()),
-        e => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()),
-    }
-}
-
-async fn select(State(pool): State<SqlitePool>) -> Result<Json<Vec<Note>>, (StatusCode, String)> {
-    select_notes(&pool).await.map_err(db_error)
+async fn select(State(pool): State<SqlitePool>) -> Result<Json<Vec<Note>>, AppError> {
+    Ok(Json(select_notes(&pool).await?))
 }
 
 async fn create(
     State(pool): State<SqlitePool>,
-    Json(input): Json<UpsterNote>,
-) -> Result<(StatusCode, Json<Note>), (StatusCode, String)> {
+    Json(raw): Json<RawInsertNote>,
+) -> Result<(StatusCode, Json<Note>), AppError> {
+    let input = InsertNote::try_from(raw)?;
     insert_note(input, &pool)
         .await
-        .map(|note| (StatusCode::CREATED, note))
-        .map_err(db_error)
+        .map(|note| (StatusCode::CREATED, Json(note)))
 }
 
 async fn update(
     State(pool): State<SqlitePool>,
-    Path(id): Path<u32>,
-    Json(input): Json<UpsterNote>,
-) -> Result<Json<Note>, (StatusCode, String)> {
-    update_note(id, input, &pool).await.map_err(db_error)
+    Path(id): Path<i64>,
+    Json(raw): Json<RawUpdateNote>,
+) -> Result<Json<Note>, AppError> {
+    let input = UpdateNote::try_from(raw)?;
+    Ok(Json(update_note(id, input, &pool).await?))
 }
 
 async fn delete(
-    Path(id): Path<u32>,
+    Path(id): Path<i64>,
     State(pool): State<SqlitePool>,
-) -> Result<Json<Note>, (StatusCode, String)> {
-    delete_note(id, &pool).await.map_err(db_error)
+) -> Result<Json<Note>, AppError> {
+    Ok(Json(delete_note(id, &pool).await?))
 }
 
 pub fn notes_router() -> Router<SqlitePool> {
