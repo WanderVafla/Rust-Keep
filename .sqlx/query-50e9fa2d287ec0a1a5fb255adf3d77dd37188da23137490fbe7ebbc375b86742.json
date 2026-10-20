@@ -1,0 +1,74 @@
+{
+  "db_name": "SQLite",
+  "query": "delete from notes\n        where\n            id = $1\n        returning\n            id,\n            title,\n            body,\n            updated_at,\n            created_at\n        ;",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "notes",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "title",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "notes",
+            "name": "title"
+          }
+        }
+      },
+      {
+        "name": "body",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "notes",
+            "name": "body"
+          }
+        }
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "notes",
+            "name": "updated_at"
+          }
+        }
+      },
+      {
+        "name": "created_at",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "notes",
+            "name": "created_at"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "50e9fa2d287ec0a1a5fb255adf3d77dd37188da23137490fbe7ebbc375b86742"
+}

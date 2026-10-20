@@ -1,0 +1,74 @@
+{
+  "db_name": "SQLite",
+  "query": "update notes\n        set\n            title = coalesce($2, title),\n            body = coalesce($3, body),\n            updated_at = datetime('now')\n        where\n            id = $1\n        returning\n            id,\n            title,\n            body,\n            updated_at,\n            created_at\n        ;",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Integer",
+        "origin": {
+          "Table": {
+            "table": "notes",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "name": "title",
+        "ordinal": 1,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "notes",
+            "name": "title"
+          }
+        }
+      },
+      {
+        "name": "body",
+        "ordinal": 2,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "notes",
+            "name": "body"
+          }
+        }
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 3,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "notes",
+            "name": "updated_at"
+          }
+        }
+      },
+      {
+        "name": "created_at",
+        "ordinal": 4,
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "notes",
+            "name": "created_at"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "5c7d050c65a4b7160287268eb9ce1d2dbe36ec9fae1f87a2328155375f3c0d7e"
+}
